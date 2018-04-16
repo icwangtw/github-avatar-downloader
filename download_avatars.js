@@ -16,19 +16,6 @@ function getRepoContributors(repoOwner, repoName, callBack) {
   });
 }
 
-
-getRepoContributors("jquery", "jquery", function(error, result) {
-  if (error) {
-    console.log(error)
-  }
-  else {
-    var parsed = JSON.parse(result)
-    parsed.forEach(function(i){
-      console.log(i.avatar_url)
-    })
-  }
-});
-
 function downloadImageByURL(url, filePath) {
   request.get(url)
         .on("error", function(error){
@@ -45,4 +32,16 @@ function downloadImageByURL(url, filePath) {
         })
         .pipe(fs.createWriteStream(filePath))
 }
-downloadImageByURL("https://avatars0.githubusercontent.com/u/1615?v=4", "./test.jpg")
+
+getRepoContributors("jquery", "jquery", function(error, result) {
+  if (error) {
+    console.log(error)
+  }
+  else {
+    var parsed = JSON.parse(result)
+    fs.mkdir("./avatars")
+    parsed.forEach(function(i){
+      downloadImageByURL(i.avatar_url, "./avatars/" + i.login + ".jpg")
+    })
+  }
+});
