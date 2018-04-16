@@ -62,3 +62,6 @@ typings/
 
 # github authorization token
 secrets.js
+
+#pic folder
+/avatars
