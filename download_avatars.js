@@ -1,5 +1,6 @@
+require("dotenv").config();
 var request = require('request');
-var token = require("./secrets.js");
+var token = process.env.GITHUB_TOKEN;
 var fs = require('fs');
 
 var owner = process.argv[2];
@@ -20,7 +21,7 @@ function getRepoContributors(repoOwner, repoName, callBack) {
               "Authorization": "token" + token.GITHUB_TOKEN
     }
   };
-  request(input, function(error, response, body) {
+  request(input, function(error, response, body){
     callBack(error, body);
   });
 };
@@ -43,7 +44,10 @@ function downloadAvatar() {
     }
     else {
       var parsed = JSON.parse(result);
-      fs.mkdirSync("./avatars");
+      var path = "./avatars"
+      if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
+      };
       parsed.forEach(function(person){
         downloadImageByURL(person.avatar_url, "./avatars/" + person.login + ".jpg")
       });
